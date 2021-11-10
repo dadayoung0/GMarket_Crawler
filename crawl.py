@@ -54,6 +54,7 @@ class Gmarket():
     def crawling(self, save_dir, use_ctg, max_num, min_sale_cnt):
         for ctg in self.categories_3:
             if ctg[1] in use_ctg:
+                pass
 
     # def get_detail_categories(self):
 
