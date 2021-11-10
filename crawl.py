@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import pandas as pd
 import requests
 import json
 import re
@@ -63,6 +64,17 @@ class Gmarket():
                     print("다른 페이지!!!!!!!!!!!")
 
     def get_crawl(self, order: str, crawl_count: int, min_sale_count: int):
+        raw_data = {
+            '1차 카테고리': [],
+            '2차 카테고리': [],
+            '3차 카테고리': [],
+            '4차 카테고리': [],
+            '상품명': [],
+            '구매수': [],
+            '리뷰수': [],
+            '상품 주소': []
+        }
+
         s = {
             "낮은 가격순": 1,
             "높은 가격순": 2,
@@ -97,12 +109,20 @@ class Gmarket():
                 except:
                     item.review_count = 0
                 item.url = box_div.find('a', class_="link__item")["href"]
-                print(item.title)
-                print(item.sale_count)
-                print(item.review_count)
-                print(item.url)
+
+                raw_data[list(raw_data.keys())[0]].append(rst[0])
+                raw_data[list(raw_data.keys())[1]].append(rst[1])
+                raw_data[list(raw_data.keys())[2]].append(rst[2])
+                raw_data[list(raw_data.keys())[3]].append(rst[3])
+                raw_data[list(raw_data.keys())[4]].append(item.title)
+                raw_data[list(raw_data.keys())[4]].append(item.sale_count)
+                raw_data[list(raw_data.keys())[4]].append(item.review_count)
+                raw_data[list(raw_data.keys())[4]].append(item.url)
 
                 box_div = box_div.next_sibling
+
+        raw_data = pd.DataFrame(raw_data)
+        raw_data.to_excel(excel_writer='sample.xlsx')
 
 
 g = Gmarket('')
