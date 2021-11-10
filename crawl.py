@@ -39,6 +39,8 @@ class Gmarket():
             for category2 in category1['subgroups']:
                 if category2['name'] != '':
                     for category3 in category2['categories']:
+                        if '.aspx' not in category3['href'] and 'category=' not in category3['href']:
+                            continue
                         self.categories_3.append([len(self.categories_1), len(
                             self.categories_2), category3['name'], category3['href']])
                     self.categories_2.append(
@@ -48,20 +50,33 @@ class Gmarket():
         self.categories_num = {}
         self.result = []
 
+        before = 0
+        for ctg in self.categories_3:
+            if ctg[1] - before > 1:
+                self.categories_2[before+1:ctg[1]] = ['']
+            before = ctg[1]
+
     def set_categories_num(self, use_ctg: list):
         for ctg in self.categories_3:
             if ctg[1] in use_ctg:
                 if 'http://category.gmarket.co.kr/listview' in ctg[3]:
-                    res = requests.get(ctg[3]).text
-                    soup = BeautifulSoup(res, 'html.parser')
+                    res = requests.get(ctg[3])
+                    soup = BeautifulSoup(res.text, 'html.parser')
+                    if res.history:
+                        continue
+
                     for detail_ctg in soup.find_all('a', class_=None, href=re.compile("category=")):
-                        self.categories_num[detail_ctg.string] = detail_ctg['href'].split('category=')[
-                            1][:9]
+                        self.categories_num[detail_ctg.string] \
+                            = detail_ctg['href'].split('category=')[1][:9]
                         self.result.append(
                             [self.categories_1[ctg[0]], self.categories_2[ctg[1]][1], ctg[2], detail_ctg.string])
+                elif 'category=' in ctg[3]:
+                    self.categories_num[ctg[3]] \
+                        = ctg[3].split('category=')[1][:9]
+                    self.result.append(
+                        [self.categories_1[ctg[0]], self.categories_2[ctg[1]][1], ctg[2], ctg[2]])
                 else:
-                    print(ctg[2], ctg[3])
-                    print("다른 페이지!!!!!!!!!!!")
+                    print("ERROR!!!!")
 
     def get_crawl(self, order: str, crawl_count: int, min_sale_count: int):
         raw_data = {
@@ -84,7 +99,10 @@ class Gmarket():
             "상품평 많은 순": 13
         }
 
+        cnt = 0
         for rst in self.result:
+            cnt += 1
+            print(len(self.result), "개 중에", cnt, "개 진행중!!")
             url = f'http://browse.gmarket.co.kr/list?category={self.categories_num[rst[3]]}&s={s[order]}'
             res = requests.get(url).text
             soup = BeautifulSoup(res, 'html.parser')
@@ -121,10 +139,18 @@ class Gmarket():
 
                 box_div = box_div.next_sibling
 
+        for i in raw_data.keys():
+            print(len(raw_data[i]))
         raw_data = pd.DataFrame(raw_data)
         raw_data.to_excel(excel_writer='sample.xlsx')
 
 
-g = Gmarket('')
-g.set_categories_num([0])
-g.get_crawl('판매 인기순', 5, 0)
+if __name__ == '__main__':
+    gmk = Gmarket('')
+    print("초기화 OK!!")
+    print(gmk.categories_2[17])
+    print(len(gmk.categories_2))
+    gmk.set_categories_num([17])
+    print("크롤링 할 카테고리 선별 OK!!")
+    gmk.get_crawl('판매 인기순', 1, 0)
+    print("크롤링 완료!!!")
