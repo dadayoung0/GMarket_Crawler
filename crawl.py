@@ -134,7 +134,8 @@ class Gmarket():
 if __name__ == '__main__':
     gmk = Gmarket('')
     print("초기화 OK!!")
-    gmk.set_detail_categories([9])
+    gmk.set_detail_categories([])
+    # 9, 10, 11, 14, 15, 18, 19
     print("상세 카테고리 조회 OK!!")
     gmk.get_crawl(50, 1000)
     print("크롤링 OK!!")
