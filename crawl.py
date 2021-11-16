@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
-import pandas as pd
 import requests
 import json
+import csv
 import re
 
 
@@ -47,8 +47,8 @@ class Gmarket():
                         [len(self.categories_1), category2['name']])
             self.categories_1.append(category1['name'])
 
-        self.categories_num = {}
         self.result = []
+        self.detail_categories = []
 
         before = 0
         for ctg in self.categories_3:
@@ -56,7 +56,8 @@ class Gmarket():
                 self.categories_2[before+1:ctg[1]] = ['']
             before = ctg[1]
 
-    def set_categories_num(self, use_ctg: list):
+    def set_detail_categories(self, use_ctg: list):
+        url = 'http://browse.gmarket.co.kr/list?category='
         for ctg in self.categories_3:
             if ctg[1] in use_ctg:
                 if 'http://category.gmarket.co.kr/listview' in ctg[3]:
@@ -66,91 +67,76 @@ class Gmarket():
                         continue
 
                     for detail_ctg in soup.find_all('a', class_=None, href=re.compile("category=")):
-                        self.categories_num[detail_ctg.string] \
-                            = detail_ctg['href'].split('category=')[1][:9]
-                        self.result.append(
-                            [self.categories_1[ctg[0]], self.categories_2[ctg[1]][1], ctg[2], detail_ctg.string])
+                        # 1차 / 2차 / 3차 / 4차 / url
+                        self.detail_categories.append([self.categories_1[ctg[0]], self.categories_2[ctg[1]][1],
+                                                      ctg[2], detail_ctg.string, url+detail_ctg['href'].split('category=')[1][:9]+'&s=8'])
+
                 elif 'category=' in ctg[3]:
-                    self.categories_num[ctg[3]] \
-                        = ctg[3].split('category=')[1][:9]
-                    self.result.append(
-                        [self.categories_1[ctg[0]], self.categories_2[ctg[1]][1], ctg[2], ctg[2]])
+                    # 1차 / 2차 / 3차 / - / url
+                    self.detail_categories.append(
+                        [self.categories_1[ctg[0]], self.categories_2[ctg[1]][1], ctg[2], '-', url+ctg[3].split('category=')[1][:9]+'&s=8'])
                 else:
                     print("ERROR!!!!")
 
-    def get_crawl(self, order: str, crawl_count: int, min_sale_count: int):
-        raw_data = {
-            '1차 카테고리': [],
-            '2차 카테고리': [],
-            '3차 카테고리': [],
-            '4차 카테고리': [],
-            '상품명': [],
-            '구매수': [],
-            '리뷰수': [],
-            '상품 주소': []
-        }
-
-        s = {
-            "낮은 가격순": 1,
-            "높은 가격순": 2,
-            "신규 상품순": 3,
-            "G마켓 랭크순": 7,
-            "판매 인기순": 8,
-            "상품평 많은 순": 13
-        }
-
+    def get_crawl(self, crawl_count: int, min_sale_count: int):
         cnt = 0
-        for rst in self.result:
+        for dtl in self.detail_categories:
             cnt += 1
-            print(len(self.result), "개 중에", cnt, "개 진행중!!")
-            url = f'http://browse.gmarket.co.kr/list?category={self.categories_num[rst[3]]}&s={s[order]}'
-            res = requests.get(url).text
+            print(len(self.detail_categories), "개 중에", cnt, "개 진행중!!")
+            res = requests.get(dtl[4]).text
             soup = BeautifulSoup(res, 'html.parser')
 
             box_div = soup.find('div', class_="box__component-itemcard")
+            if box_div == None:
+                print(f'"{dtl[3]}" 카테고리에 아무런 상품이 없습니다...')
+                continue
 
             item = Item()
-
+            c = 1
             for i in range(crawl_count):
+                print(crawl_count, "중에", c, "번째 항목 조회")
+                c += 1
                 try:
                     item.sale_count = int(box_div.find(
-                        'li', class_="list-item__pay-count").span.contents[-1])
-                    if item.sale_count < min_sale_count:
-                        continue
+                        'li', class_="list-item__pay-count").span.contents[-1].replace(',', ''))
                 except:
                     item.sale_count = 0
 
+                if item.sale_count < min_sale_count:
+                    print(min_sale_count, "보다 적어서 다음 카테고리로...")
+                    break
+
                 item.title = box_div.find('span', class_="text__item")['title']
+
                 try:
                     item.review_count = int(box_div.find(
-                        'li', class_="list-item__feedback-count").contents[1].contents[2])
+                        'li', class_="list-item__feedback-count").contents[1].contents[2].replace(',', ''))
                 except:
                     item.review_count = 0
                 item.url = box_div.find('a', class_="link__item")["href"]
 
-                raw_data[list(raw_data.keys())[0]].append(rst[0])
-                raw_data[list(raw_data.keys())[1]].append(rst[1])
-                raw_data[list(raw_data.keys())[2]].append(rst[2])
-                raw_data[list(raw_data.keys())[3]].append(rst[3])
-                raw_data[list(raw_data.keys())[4]].append(item.title)
-                raw_data[list(raw_data.keys())[4]].append(item.sale_count)
-                raw_data[list(raw_data.keys())[4]].append(item.review_count)
-                raw_data[list(raw_data.keys())[4]].append(item.url)
+                # 1차 / 2차 / 3차 / 4차 / 아이템명 / 판매량 / 리뷰수 / 주소
+                self.result.append([dtl[0], dtl[1], dtl[2], dtl[3], item.title,
+                                   item.sale_count, item.review_count, item.url])
 
                 box_div = box_div.next_sibling
+                if box_div == None:
+                    print(f'"{dtl[3]}" 카테고리에 더 이상 상품이 없습니다...')
+                    break
 
-        for i in raw_data.keys():
-            print(len(raw_data[i]))
-        raw_data = pd.DataFrame(raw_data)
-        raw_data.to_excel(excel_writer='sample.xlsx')
+    def save_data(self):
+        with open('GMarket.csv', 'w', encoding='utf-8', newline='') as f:
+            wr = csv.writer(f)
+            for row in self.result:
+                wr.writerow(row)
 
 
 if __name__ == '__main__':
     gmk = Gmarket('')
     print("초기화 OK!!")
-    print(gmk.categories_2[17])
-    print(len(gmk.categories_2))
-    gmk.set_categories_num([17])
-    print("크롤링 할 카테고리 선별 OK!!")
-    gmk.get_crawl('판매 인기순', 1, 0)
-    print("크롤링 완료!!!")
+    gmk.set_detail_categories([9])
+    print("상세 카테고리 조회 OK!!")
+    gmk.get_crawl(50, 1000)
+    print("크롤링 OK!!")
+    gmk.save_data()
+    print("저장 OK!!")
