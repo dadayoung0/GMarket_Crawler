@@ -68,8 +68,9 @@ class Gmarket():
 
                     for detail_ctg in soup.find_all('a', class_=None, href=re.compile("category=")):
                         # 1차 / 2차 / 3차 / 4차 / url
+                        # s = 8(판매량 순) / 7(지마켓 랭크순)
                         self.detail_categories.append([self.categories_1[ctg[0]], self.categories_2[ctg[1]][1],
-                                                      ctg[2], detail_ctg.string, url+detail_ctg['href'].split('category=')[1][:9]+'&s=8'])
+                                                      ctg[2], detail_ctg.string, url+detail_ctg['href'].split('category=')[1][:9]+'&s=7'])
 
                 elif 'category=' in ctg[3]:
                     # 1차 / 2차 / 3차 / - / url
@@ -134,10 +135,10 @@ class Gmarket():
 if __name__ == '__main__':
     gmk = Gmarket('')
     print("초기화 OK!!")
-    gmk.set_detail_categories([])
+    gmk.set_detail_categories([9, 10, 11, 14, 15, 18, 19])
     # 9, 10, 11, 14, 15, 18, 19
     print("상세 카테고리 조회 OK!!")
-    gmk.get_crawl(50, 1000)
+    gmk.get_crawl(25, 0)
     print("크롤링 OK!!")
     gmk.save_data()
     print("저장 OK!!")
