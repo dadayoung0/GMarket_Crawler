@@ -441,7 +441,7 @@ class Gmarket():
                     break
 
     def save_data(self, num):
-        with open(f'GMarket_1118_{num}.csv', 'w', encoding='utf-8', newline='') as f:
+        with open(f'GMarket_1126_{num}.csv', 'w', encoding='utf-8', newline='') as f:
             wr = csv.writer(f)
             for row in self.result:
                 wr.writerow(row)
@@ -458,6 +458,6 @@ def crawl(num):
     print("저장 OK!!")
 
 if __name__ == '__main__':
-    ctg = [9, 10, 11, 14, 15, 18, 19]
+    ctg = [15, 16, 17]
     pool = Pool(processes=7)
     pool.map(crawl, ctg)

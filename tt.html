@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ko">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="referrer" content="always">
+        <meta name="format-detection" content="telephone=no,address=no,email=no">
+        <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1.0,maximum-scale=2.0">
+        <meta property="og:title" content="오징어 : 네이버 통합검색"/>
+        <meta
+            property="og:image"
+            content="https://ssl.pstatic.net/sstatic/search/common/og_v3.png">
+        <meta property="og:description" content="'오징어'의 네이버 통합검색 결과입니다.">
+        <meta name="description" lang="ko" content="'오징어'의 네이버 통합검색 결과입니다.">
+        <title>오징어 : 네이버 통합검색</title>
+        <link
+            rel="shortcut icon"
+            href="https://ssl.pstatic.net/sstatic/search/favicon/favicon_191118_pc.ico">
+        <link
+            rel="search"
+            type="application/opensearchdescription+xml"
+            href="https://ssl.pstatic.net/sstatic/search/opensearch-description.https.xml"
+            title="Naver"/>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://ssl.pstatic.net/sstatic/search/pc/css/search1_211118.css">
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://ssl.pstatic.net/sstatic/search/pc/css/search2_211111.css">
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://ssl.pstatic.net/sstatic/search/pc/css/sp_autocomplete_210318.css">
+        <script type="text/javascript">
+            if (!String.prototype.trim) {
+                String.prototype.trim = function () {
+                    return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+                };
+            }
+            if (!Array.prototype.indexOf) {
+                Array.prototype.indexOf = function (searchElement, fromIndex) {
+                    var k;
+                    if (this == null) {
+                        throw new TypeError('"this" is null or not defined');
+                    }
+                    var o = Object(this);
+                    var len = o.length >>> 0;
+                    if (len === 0) {
+                        return -1;
+                    }
+                    var n = fromIndex | 0;
+                    if (n >= len) {
+                        return -1;
+                    }
+                    k = Math.max(
+                        n >= 0
+                            ? n
+                            : len - Math.abs(n),
+                        0
+                    );
+                    while (k < len) {
+                        if (k in o && o[k] === searchElement) {
+                            return k;
+                        }
+                        k++;
+                    }
+                    return -1;
+                };
+            }
+            if (!Array.prototype.filter) {
+                Array.prototype.filter = function (func, thisArg) {
+                    'use strict';
+                    if (!((typeof func === 'Function' || typeof func === 'function') && this)) 
+                        throw new TypeError();
+                    var len = this.length >>> 0,
+                        res = new Array(len),
+                        t = this,
+                        c = 0,
+                        i = -1;
+                    var kValue;
+                    if (thisArg === undefined) {
+                        while (++i !== len) {
+                            if (i in this) {
+                                kValue = t[i];
+                                if (func(t[i], i, t)) {
+                                    res[c++] = kValue;
+                                }
+                            }
+                        }
+                    } else {
+                        while (++i !== len) {
+                            if (i in this) {
+                                kValue = t[i];
+                                if (func.call(thisArg, t[i], i, t)) {
+                                    res[c++] = kValue;
+                                }
+                            }
+                        }
+                    }
+                    res.length = c;
+                    return res;
+                };
+            }
+            if (typeof(encodeURIComponent) != "function") {
+                encodeURIComponent = function (s) {
+                    function toHex(n) {
+                        var hexchars = "0123456789ABCDEF";
+                        return "%%" + hexchars.charAt(n >> 4) + hexchars.charAt(n & 0xF);
+                    }
+                    var es = "";
+                    for (var i = 0; i < s.length;) {
+                        var c = s.charCodeAt(i++);
+                        if ((c & 0xF800) == 0xD800) {
+                            var sc = s.charCodeAt(i++);
+                            c = ((c - 0xD800) << 10) + (sc - 0xDC00) + 0x10000;
+                        }
+                        if (!(c & ~ 0x7F)) {
+                            if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) || (c >= 45 && c <= 46) || c == 95 || c == 33 || c == 126 || (c >= 39 && c <= 42)) 
+                                es += String.fromCharCode(c);
+                            else 
+                                es += toHex(c);
+                            }
+                        else if (!(c & ~ 0x7FF)) 
+                            es += toHex(0xC0 + (c >> 6)) + toHex(c & 0x3F);
+                        else if (!(c & ~ 0xFFFF)) 
+                            es += toHex(0xE0 + (c >> 12)) + toHex(0x80 + (c >> 6 & 0x3F)) + toHex(
+                                0x80 + (c & 0x3F)
+                            );
+                        else 
+                            es += toHex(0xF0 + (c >> 18)) + toHex(0x80 + (c >> 12 & 0x3F)) + toHex(
+                                0x80 + (c >> 6 & 0x3F)
+                            ) + toHex(0x80 + (c & 0x3F));
+                        }
+                    return es;
+                }
+            }
+            naver = window.naver || {};
+            naver.search = naver.search || {};
+            naver.search.abt_param = "";
+            var g_D = 0;
+            naver.search.error = (function () {
+                var errorList = Array();
+                return {
+                    add: function (s) {
+                        errorList.push(s);
+                    },
+                    clear: function () {
+                        delete errorList;
+                    },
+                    get: function (s) {
+                        return errorList;
+                    },
+                    getString: function (d) {
+                        if (typeof d === 'undefined') 
+                            d = '|';
+                        return errorList.join(d);
+                    }
+                }
+            })();
+            naver.search.cookie = (function () {
+                return {
+                    set: function (key, value, expire, domain) {
+                        var cookie = key + "=" + escape(value);
+                        if (typeof expire !== 'undefined') {
+                            if (expire instanceof Date) {
+                                cookie = cookie + "; expires=" + expire.toUTCString();
+                            } else {
+                                var exdate = new Date((new Date()).getTime() + expire * 1000);
+                                cookie = cookie + "; expires=" + exdate.toUTCString();
+                            }
+                        }
+                        cookie = cookie + "; path=/";
+                        if (domain != null) {
+                            cookie = cookie + "; domain=" + domain;
+                        }
+                        document.cookie = cookie;
+                    },
+                    get: function (key) {
+                        var cookie_list = document
+                            .cookie
+                            .split(/\s*;\s*/);
+                        for (var i = 0; i < cookie_list.length; i++) {
+                            var tmp_list = cookie_list[i].split("=");
+                            var c_key = tmp_list[0].trim();
+                            var c_value = tmp_list[1];
+                            if (key == c_key) {
+                                return unescape(c_value);
+                            }
+                        }
+                        return null;
+                    }
+                }
+            })();
+            naver.search.https = window.location.protocol == "https:";
+            naver.search.meta_referrer = 0;
+            var _nx_js_load = (function () {
+                var scrs = {};
+                return function (script, callback) {
+                    scrs[script] = {};
+                    scrs[script].domscript = document.createElement('script');
+                    scrs[script].domscript.src = script;
+                    if (callback) 
+                        scrs[script].callback = (callback instanceof Array)
+                            ? callback
+                            : [callback];
+                    scrs[script].domscript.onloadDone = false;
+                    scrs[script].domscript.onload = function () {
+                        scrs[script].domscript.onloadDone = true;
+                        if (scrs[script].callback) {
+                            for (var i = 0; i < scrs[script].callback.length; i++) {
+                                scrs[script].callback[i]();
+                            }
+                        }
+                        scrs[script].domscript.onload = scrs[script].domscript.onreadystatechange = null;
+                    };
+                    scrs[script].domscript.onreadystatechange = function () {
+                        if (("loaded" === scrs[script].domscript.readyState || "complete" === scrs[script].domscript.readyState) && !scrs[script].domscript.onloadDone) {
+                            scrs[script]
+                                .domscript
+                                .onload();
+                        }
+                    };
+                    document
+                        .getElementsByTagName('head')[0]
+                        .appendChild(scrs[script].domscript);
+                };
+            })();
+            var nx_js_defer_load = (function () {
+                var info = {};
+                return function (scrname, callback, t) {
+                    var nx_load_once = (function () {
+                        return function (scrname) {
+                            if (info[scrname].t > 0) 
+                                setTimeout(function () {
+                                    _nx_js_load(scrname, info[scrname].callback);
+                                }, t);
+                            else 
+                                _nx_js_load(scrname, info[scrname].callback);
+                            }
+                        ;
+                    })();
+                    if (t < 0) 
+                        t = 0;
+                    if (info[scrname]) {
+                        n = info[scrname].length;
+                        for (var i = 0; i < n; i++) {
+                            if (info[scrname][i] == callback) 
+                                return;
+                            }
+                        if (t < info[scrname].t) 
+                            info[scrname].t = t;
+                        }
+                    else {
+                        info[scrname] = {};
+                        info[scrname].callback = [];
+                        info[scrname].t = t;
+                        jindo
+                            .$Fn(function () {
+                                nx_load_once(scrname);
+                            })
+                            .attach(window, "load");
+                    }
+                    info[scrname]
+                        .callback
+                        .push(callback);
+                };
+            })();
+            function nx_js_lazyload(scripts, onload, is_serial) {
+                if (!(scripts instanceof Array)) {
+                    scripts = [scripts];
+                }
+                if (is_serial) {
+                    function load_next() {
+                        if (scripts.length == 0) {
+                            onload();
+                            return;
+                        }
+                        _nx_js_load(scripts.shift(), load_next);
+                    }
+                    load_next();
+                } else {
+                    var load_check = function () {
+                        var num_js = scripts.length;
+                        return function () {
+                            num_js--;
+                            if (num_js <= 0) {
+                                onload();
+                            }
+                        }
+                    }();
+                    for (var i = 0; i < scripts.length; i++) {
+                        _nx_js_load(scripts[i], load_check);
+                    }
+                }
+            }
+            function nx_defer_eval(id) {
+                var codeElement = document.getElementById(id),
+                    code = codeElement.innerHTML;
+                eval(code.replace(/\/\*/, '').replace(/\*\//, ''));
+            }
+        </script>
+        <script>
+            try { document.execCommand('BackgroundImageCache', false, true); } catch (e) { } if (top.frames.length != 0 || window != top) window.open(location, "_top"); naver = window.naver || {}; naver.search = naver.search || {}; naver.search.ext = naver.search.ext || {}; naver.search.map_api = { v2: "https://ssl.pstatic.net/sstatic.map/openapi/openapi_v23.js", v3: "https://ssl.pstatic.net/sstatic.map/openapi/maps3.js" }; var nx_au_cookie_domain = "search.naver.com"; var nx_mobile_agent = 0; var headerfooter_query = "오징어"; var headerfooter_query_encoded = "%EC%98%A4%EC%A7%95%EC%96%B4"; var headerfooter_time_year = 2021; var headerfooter_time_month = 11; var headerfooter_time_day = 22; var headerfooter_time_hour = 18; var headerfooter_time_minute = 2; var headerfooter_time_second = 11; var headerfooter_time_wday = 1; var headerfooter_time_year_s = "2021"; var headerfooter_time_month_s = "11"; var headerfooter_time_day_s = "22"; var headerfooter_time_hour_s = "18"; var headerfooter_time_minute_s = "02"; var headerfooter_time_second_s = "11"; var headerfooter_time_wday_s = "1"; var g_ssc = "tab.nx.all"; var g_query = "오징어"; var g_puid = "hiWNCwprvOsssNj5dFdsssssssw-511026"; var g_suid = "FNvTXqCbj7up5BLLkXitDQ=="; var g_tab = "nexearch"; var g_stab = "nexearch"; var g_crt = naver.search.abt_param; var g_nx_splugin; document.domain = "naver.com"; document.documentElement.setAttribute('data-useragent', window.navigator.userAgent.toLowerCase()); document.documentElement.setAttribute('data-platform', window.navigator.platform.toLowerCase()); var g_er_image, g_er_count = 0; function g_er(msg) { if (g_er_count++ > 0) return; g_er_image = new Image(); g_er_image.src = "http://er.search.naver.com/er?f=" + g_tab + "&w=" + g_stab + "&q=%EC%98%A4%EC%A7%95%EC%96%B4&u=" + encodeURIComponent(document.location) + "&m=" + encodeURIComponent(msg); } function trim_space(q) { var head_re = /^ */; var tail_re = / *$/; q = q.replace(head_re, ""); q = q.replace(tail_re, ""); return q; } function trim_crlf(q) { var crlf = /[\r|\n]/; q = q.replace(crlf, ""); return q; } function include_script(type, defer, src, charset) { var script = document.createElement("script"); script.type = type, script.defer = defer; script.src = src; if (charset) script.charset = charset; else script.charset = 'utf-8'; document.getElementsByTagName('head')[0].appendChild(script); return script; } function include_style(src, charset) { var h = document.getElementsByTagName("head")[0]; var l = document.createElement('link'); l.type = 'text/css'; l.rel = 'stylesheet'; if (charset) l.charset = charset; else l.charset = 'utf-8'; l.media = 'screen'; l.href = src; h.appendChild(l); } function bt(id, after) { document.getElementById(id).src = after; } function urlencode(q) { return encodeURIComponent(q).replace(/%20/g, "+").replace(/[!~'()]/g, function (c) { return '%' + c.charCodeAt(0).toString(16).toUpperCase(); }); } function urldecode(q) { return decodeURIComponent(q.replace(/\+/g, " ")); } function
+            urlexpand(url) { var href = document.location.href; if (url == "") return href; if (url.match(/^[-.A-Za-z]+:/)) return url; if (url.charAt(0) == '#') return href.split("#")[0] + url; if (url.charAt(0) == '?') return href.split("?")[0] + url; if (url.charAt(0) == '/') return href.replace(/([^:\/])\/.*$/, "$1") + url; return href.substring(0, href.lastIndexOf("/") + 1) + url; } function tt_sub_disable(o) { if (typeof (o.tt_sub) == "undefined") return false; if ((typeof (o.tt_sub) == "object") && (o.tt_sub.length)) { var i; for (var i = 0; i < o.tt_sub.length; i++) o.tt_sub[i].disabled = true; } else o.tt_sub.disabled = true; return true; } function cpip() { var evt, sx = sy = px = py = -1; try { evt = window.event; } catch (e) { } try { sx = evt.clientX - document.body.clientLeft, sy = evt.clientY - document.body.clientTop; } catch (e) { } try { px = document.body.scrollLeft + (sx < 0 ? 0 : sx), py = document.documentElement.scrollTop + (sy < 0 ? 0 : sy); } catch (e) { } try { if (evt.pageX) px = evt.pageX; if (evt.pageY) py = evt.pageY; } catch (e) { } return "px=" + px + "&py=" + py + "&sx=" + sx + "&sy=" + sy; } function nxGetCommonCRParam() { return "p=" + urlencode(g_puid) + "&q=" + urlencode(g_query) + "&ie=utf8&rev=1&ssc=" + urlencode(g_ssc) + "&f=" + urlencode(g_tab) + "&w=" + urlencode(g_stab) + "&s=" + urlencode(g_suid) + "&time=" + urlencode((new Date()).getTime()) + g_crt; } function getCRRankingByParam(p, info) { if (typeof info == 'undefined' || info == null) return 0; var cr = 0; try { var y, z; var y = p.split('&'); for (var i = 0; i < y.length; i++) { if (z = y[i].split('=')) { if (z[0] == 'a') { for (var j = 0; j < info.length; j++) { if (z[1].substr(0, info[j].n.length) == info[j].n) { cr = info[j].r; break; } } break; } } } } catch (e) { } return cr; } function getCRRanking(p) { var cr = 0; if (typeof nx_cr_area_info != 'undefined') cr = getCRRankingByParam(p, nx_cr_area_info); if (cr) return cr; if (typeof nx_cr_right_area_info != 'undefined') cr = getCRRankingByParam(p, nx_cr_right_area_info); return cr; } function isOutlink(u) { if (!u || u.indexOf("://") < 0) return false; var b = (u.search(/^\w*:\/\/([^:/?]*\.|)*(?!(ad)?cr\.)[^.:/?]+\.+naver\.com(:\d*)?(\/|$)/) < 0); return b; } function nxGetCRURL(m, a, b, c, d, e) { var p = ""; var u; if (c == undefined && d == undefined && e == undefined) { p = (a == undefined ? "" : "&" + a) + (b == undefined || a.indexOf("u=") == 0 || a.indexOf("&u=") > 0 ? "" : "&u=" + urlencode(b)); u = b; } else { p = (a == undefined ? "" : "&a=" + urlencode(a)) + (b == undefined ? "" : "&r=" + urlencode(b)) + (c == undefined ? "" : "&i=" + urlencode(c)) + (d == undefined ? "" : "&u=" + urlencode(d)) + (e == undefined ? "" : "&" + e); u = d; } if (!p) return null; var url; if (naver.search.https) { url = (naver.search.meta_referrer ? "/p/crd" : "/p/cr") + "/rd"; if (m != 0) m = 1; } else { out = isOutlink(u); url = "http://cr.naver.com" + (g_D && out ? "/nr" : "/rd"); if (m != 0) m = g_D && out ? 2 : 1; } url += "?m=" + m + "&" + cpip() + "&" + nxGetCommonCRParam() + p; return url; } function tCR(a, b, c, d, e) {
+                var l = nxGetCRURL(0, a, b, c, d, e); var cr = getCRRanking(l); if (cr > 0) l
+                    = l + "&cr=" + cr; if (document.images) (new Image()).src = l; else document.location = l; return false;
+            } function gCR(u, a, r, i, e, t) {
+                if (u) u = urlexpand(u); var l = nxGetCRURL(1, a, r, i, u, e)
+                    ; var o = document.createElement("a"); var cr = getCRRanking(l); if (cr > 0) l = l + "&cr=" + cr; if (o.click) { o.href = l; o.style.display = "none"; document.body.appendChild(o); o.click(); } else document.location = l;
+            } function goCR(o, p, t) { var u = o.href; tt_sub_disable(o); if (p.indexOf("u=javascript") >= 0) t = true; var n = (o.ownerDocument == document && o.target && o.target != "_self" && o.target != "_parent" && o.target != "_top") && !(window.location.protocol && window.location.protocol.indexOf("https:") == 0); var cr = getCRRanking(p); if (cr > 0) p = p + "&cr=" + cr; if (!(u && u.indexOf("http://cr.naver.com/") == 0) && !(o.getAttribute !== undefined && o.getAttribute("crurl"))) { if (0 && u && u.indexOf("/search.naver?") >= 0) { var str = ""; p = p.replace(/(((?:^|&)u=).*%2Fsearch.naver%3F[^&]*)/, '$1' + str); } u = nxGetCRURL(t ? 0 : (n ? -1 : 1), p, u); } if (u && !u.match(/m=0&/)) { var a = o.innerHTML; if (g_D && naver.search.https && naver.search.meta_referrer && o.href && isOutlink(o.href)) o.setAttribute("rel", "noreferrer"); o.href = u; if (o.getAttribute !== undefined) o.setAttribute("crurl", "1"); if (o.innerHTML != a) o.innerHTML = a; } else if (document.images) (new Image()).src = u; return true; } function goOtherCR(o, p) { return goCR(o, p, false); } function goOtherTCR(o, p) { return goCR(o, p, true); } function get_form_url(o) { var url = o.getAttribute("action"); if (url == null) url = ""; var e, n = 0; for (var i = 0; i < o.elements.length; i++) { e = o.elements[i]; if (e.disabled || !e.name) continue; url += (n++ > 0 ? "&" : url.indexOf("?") < 0 ? "?" : url.indexOf("?") < url.length - 1 ? "&" : "") + encodeURIComponent(e.name) + "=" + encodeURIComponent(e.value); } return url; } function formCR(o, area, rank, id) { if (typeof o == 'string') o = document.getElementById(o); var target = o.getAttribute("target"); if (target && target != "_self" && target != "_parent" && target != "_top" || /^post$/i.test(o.getAttribute("method"))) { tCR(area, rank, id); o.submit(); return false; } var url = get_form_url(o); var a = document.createElement("a"); a.href = url; var p = area != undefined ? "a=" + area : ""; if (rank != undefined) p += (p ? "&" : "") + "r=" + encodeURIComponent(rank); if (id != undefined) p += (p ? "&" : "") + "i=" + encodeURIComponent(id); if (url != undefined
